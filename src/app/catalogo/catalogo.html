@@ -1,0 +1,23 @@
+<h1 class="text-2xl font-bold mb-4">Catálogo</h1>
+
+@if (loading) {
+  <p>Cargando productos...</p>
+} @else if (error) {
+  <p class="text-red-500">{{ error }}</p>
+} @else {
+  <div class="grid grid-cols-2 gap-4">
+    @for (producto of productos; track producto.id) {
+    <div class="p-4 border rounded shadow">
+        <h3 class="font-semibold">{{ producto.nombre }}</h3>
+        <p>{{ producto.descripcion }}</p>
+        <p class="text-green-600 font-bold">{{ producto.precio | currency }}</p>
+        
+        <button
+            class="mt-2 bg-green-500 text-white px-3 py-1 rounded"
+            (click)="agregar(producto)">
+            Agregar al carrito
+        </button>
+    </div>
+    }
+  </div>
+}

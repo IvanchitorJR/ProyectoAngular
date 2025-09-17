@@ -1,0 +1,38 @@
+<catalogo>
+    <producto>
+        <id>1</id>
+        <nombre>Sillón Individual</nombre>
+        <precio>3199</precio>
+        <imagen>assets/sillon.jpg</imagen>
+        <descripcion>Sillón individual de cuero sintético, color marrón oscuro, con estructura de madera y patas de metal. 
+        Ideal para salas de estar y oficinas.</descripcion>
+    </producto>
+    <producto>
+        <id>2</id>
+        <nombre>Marco para Fotos</nombre>
+        <precio>299</precio>
+        <imagen>assets/marco.jpg</imagen>
+        <descripcion>Marco para fotos de madera reciclada, color natural, con acabado rústico.</descripcion>
+    </producto>
+    <producto>
+        <id>3</id>
+        <nombre>Comedor</nombre>
+        <precio>4999</precio>
+        <imagen>assets/comedor.jpg</imagen>
+        <descripcion>Juego de comedor de madera maciza, incluye mesa y cuatro sillas.</descripcion>
+    </producto>
+    <producto>
+        <id>4</id>
+        <nombre>Espejo de Pared</nombre>
+        <precio>899</precio>
+        <imagen>assets/espejo.jpg</imagen>
+        <descripcion>Espejo de pared con marco de metal, diseño moderno y elegante.</descripcion>
+    </producto>
+    <producto>
+        <id>5</id>
+        <nombre>Lámpara de Techo</nombre>
+        <precio>1299</precio>
+        <imagen>assets/lampara.jpg</imagen>
+        <descripcion>Lámpara de techo con diseño contemporáneo, acabado en cromo y pantalla de vidrio esmerilado.</descripcion>
+    </producto>
+</catalogo>

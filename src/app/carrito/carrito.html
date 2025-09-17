@@ -1,0 +1,32 @@
+<h2 class="text-xl font-bold mb-4">Carrito</h2>
+
+@if (carrito().length === 0) {
+  <p>Tu carrito está vacío.</p>
+} @else {
+  <ul class="space-y-2">
+    <li *ngFor="let producto of carrito(); trackBy: trackById" class="p-2 border rounded flex justify-between items-center">
+      <span>{{ producto.nombre }} - {{ producto.precio | currency }}</span>
+      <button
+        class="bg-red-500 text-white px-2 py-1 rounded"
+        (click)="quitar(producto.id)">
+        Quitar
+      </button>
+    </li>
+  </ul>
+
+  <div class="mt-4 font-semibold">
+    Total: {{ total() | currency }}
+  </div>
+
+  <button
+    class="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+    (click)="vaciar()">
+    Vaciar carrito
+  </button>
+}
+
+<button
+  class="mt-2 bg-purple-500 text-white px-4 py-2 rounded"
+  (click)="exportarXML()">
+  Exportar Recibo XML
+</button>
