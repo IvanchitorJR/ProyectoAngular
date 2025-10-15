@@ -29,6 +29,7 @@ export class CatalogoComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
+    //getProductos, obtenerProuctos
     this.productoService.getProductos().subscribe({
       next: (productos: Producto[]) => {
         this.productos = productos;

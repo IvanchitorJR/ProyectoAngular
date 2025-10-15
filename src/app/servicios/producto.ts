@@ -9,7 +9,14 @@ import { map, Observable } from 'rxjs';
 })
 export class ProductoService {
 
-  private xmlUrl = 'assets/catalogoProductos.xml';
+  private apiUrl = 'http://localhost:4000/api';
+  constructor(private http: HttpClient) { }
+
+  getProductos(): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${this.apiUrl}/productos`);
+  }
+
+  /*private xmlUrl = 'assets/catalogoProductos.xml';
 
   constructor(
     private http: HttpClient,
@@ -46,5 +53,5 @@ export class ProductoService {
     }
 
     return productos;
-  }
+  }*/
 }
