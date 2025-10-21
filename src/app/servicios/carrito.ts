@@ -9,8 +9,21 @@ export class CarritoService {
   //Exponer el carrito como readonly
   productos = this.productosSignal.asReadonly();
 
-  agregar(producto: Producto) {
-    this.productosSignal.update(lista => [...lista, producto]);
+  agregar(producto: any) {
+    const productosActuales = this.productos();
+    const existente = productosActuales.find(p => p.id === producto.id);
+    if (existente) {
+      existente.cantidad = (existente.cantidad || 1) + 1;
+      this.productosSignal.set([...productosActuales]);
+    } else {
+      this.productosSignal.set([...productosActuales, { ...producto, cantidad: 1 }]);
+    }
+  }
+
+  actualizarCantidad(id: number, cantidad: number) {
+    this.productosSignal.update(arr =>
+      arr.map(p => p.id === id ? { ...p, cantidad } : p)
+    );
   }
 
   quitar(id: number) {
@@ -24,7 +37,7 @@ export class CarritoService {
   }
 
   total() {
-    return this.productosSignal().reduce((acc, p) => acc + p.precio, 0);
+    return this.productosSignal().reduce((acc, p) => acc + (p.precio * (p.cantidad || 1)), 0);
   }
 
   exportarXML() {
