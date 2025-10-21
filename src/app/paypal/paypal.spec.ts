@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CarritoComponent } from './carrito';
+import { Paypal } from './paypal';
 
-describe('Carrito', () => {
-  let component: CarritoComponent;
-  let fixture: ComponentFixture<CarritoComponent>;
+describe('Paypal', () => {
+  let component: Paypal;
+  let fixture: ComponentFixture<Paypal>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CarritoComponent]
+      imports: [Paypal]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CarritoComponent);
+    fixture = TestBed.createComponent(Paypal);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
