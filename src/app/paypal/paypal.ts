@@ -28,7 +28,7 @@ export class Paypal implements OnInit {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
-      this.initConfig(); // 🔹 Inicializamos el botón aquí
+      this.initConfig();
     }
   }
 
