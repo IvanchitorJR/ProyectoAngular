@@ -1,1 +1,6 @@
-<ngx-paypal [config]="payPalConfig"></ngx-paypal>
+<div *ngIf="isBrowser">
+  <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+  <button *ngIf="isBrowser" (click)="carritoService.exportarXML()" class="btn btn-success mt-3">
+  Descargar recibo XML
+</button>
+</div>

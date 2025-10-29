@@ -3,6 +3,7 @@ import { CarritoService } from '../servicios/carrito';
 import { ProductoService } from '../servicios/producto';
 import { CurrencyPipe, CommonModule } from '@angular/common';
 import { Paypal } from '../paypal/paypal';
+
 @Component({
   selector: 'app-carrito',
   standalone: true,
@@ -10,13 +11,16 @@ import { Paypal } from '../paypal/paypal';
   templateUrl: './car.html',
   styleUrls: ['./car.css']
 })
+
 export class CarritoComponent {
   private carritoService = inject(CarritoService);
   private productoService = inject(ProductoService);
 
   mostrarPaypal = false;
   carrito = this.carritoService.productos;
-  total = computed(() => this.carritoService.total());
+  totalConIVA = computed(() => this.carritoService.totalConIVA());
+  subtotal = computed(() => this.carritoService.total());
+  iva = computed(() => this.carritoService.iva());
 
   quitar(id: number) {
     this.carritoService.quitar(id);

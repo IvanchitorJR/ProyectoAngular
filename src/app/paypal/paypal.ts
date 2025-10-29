@@ -1,33 +1,39 @@
-import {
-  Component,
-  OnInit,
-  Input
-} from '@angular/core';
-import {
-  IPayPalConfig,
-  ICreateOrderRequest
-} from 'ngx-paypal';
-
+import { Component, OnInit, Input, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { IPayPalConfig, ICreateOrderRequest } from 'ngx-paypal';
 import { NgxPayPalModule } from 'ngx-paypal';
 import { Producto } from '../modelos/producto';
+import { CarritoService } from '../servicios/carrito';
 
 @Component({
   selector: 'app-paypal',
-  imports: [NgxPayPalModule],
+  standalone: true,
+  imports: [CommonModule, NgxPayPalModule],
   templateUrl: './paypal.html',
-  styleUrl: './paypal.css'
+  styleUrls: ['./paypal.css']
 })
 export class Paypal implements OnInit {
-  @Input() total: number = 0;
+  @Input() total: number = 0;      
   @Input() productos: Producto[] = [];
-  public payPalConfig?: IPayPalConfig;
 
+  public payPalConfig?: IPayPalConfig;
+  public isBrowser = false;
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object, 
+    public carritoService: CarritoService
+  ) {}
 
   ngOnInit(): void {
-    this.initConfig();
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
+      this.initConfig(); // 🔹 Inicializamos el botón aquí
+    }
   }
 
   private initConfig(): void {
+    if (!this.productos.length || !this.total) return;
 
     const items = this.productos.map(p => ({
       name: p.nombre,
@@ -35,63 +41,43 @@ export class Paypal implements OnInit {
       category: 'PHYSICAL_GOODS',
       unit_amount: {
         currency_code: 'MXN',
-        value: String(p.precio)
+        value: (p.precio * 1.16).toFixed(2) 
       }
     }));
-
-    const total = this.productos.reduce((acc, p) => acc + (p.precio * (p.cantidad || 1)), 0);
 
     this.payPalConfig = {
       currency: 'MXN',
       clientId: 'AcxeK-Q6ukxO8MY1dev1zfZfz_ZVqaoAYWrwk1iwMUyiEwaSallBYATXkPfQhlMd3cpRJ4LjnmYNXVhl',
-      createOrderOnClient: (data) => <ICreateOrderRequest>{
+      createOrderOnClient: () => <ICreateOrderRequest>{
         intent: 'CAPTURE',
         purchase_units: [{
           amount: {
             currency_code: 'MXN',
-            value: String(total),
+            value: this.total.toFixed(2),
             breakdown: {
               item_total: {
                 currency_code: 'MXN',
-                value: String(total)
+                value: this.total.toFixed(2)
               }
             }
           },
           items
-          
         }]
       },
-      advanced: {
-        commit: 'true'
-      },
-      style: {
-        label: 'paypal',
-        layout: 'vertical'
-      },
+      advanced: { commit: 'true' },
+      style: { label: 'paypal', layout: 'vertical' },
       onApprove: (data, actions) => {
-        console.log('onApprove - transaction was approved, but not authorized', data, actions);
         actions.order.get().then((details: any) => {
-          console.log('onApprove - you can get full order details inside onApprove: ', details);
+          console.log('Detalles del pago:', details);
         });
-
       },
-      onClientAuthorization: (data) => {
-        console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
-
+      onClientAuthorization: (data: any) => {
+        console.log('Pago completado', data);
+        this.carritoService.exportarXML();
       },
-      onCancel: (data, actions) => {
-        console.log('OnCancel', data, actions);
-
-
-      },
-      onError: err => {
-        console.log('OnError', err);
-
-      },
-      onClick: (data, actions) => {
-        console.log('onClick', data, actions);
-
-      }
+      onCancel: (data: any, actions: any) => console.log('Cancelado', data, actions),
+      onError: (err: any) => console.error('Error PayPal', err),
+      onClick: (data: any, actions: any) => console.log('Click', data, actions)
     };
   }
 }
