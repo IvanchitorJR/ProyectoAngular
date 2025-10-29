@@ -1,0 +1,22 @@
+<div class="auth-container">
+  <h2>Registro de usuario</h2>
+  <form (ngSubmit)="submit()">
+    <div class="form-row">
+      <label>Nombre</label>
+      <input type="text" [(ngModel)]="nombre" name="nombre" />
+    </div>
+    <div class="form-row">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="correo" name="correo" required />
+    </div>
+    <div class="form-row">
+      <label>Contraseña</label>
+      <input type="password" [(ngModel)]="password" name="password" required />
+    </div>
+    <div class="form-row">
+      <button type="submit">Registrar</button>
+      <a routerLink="/login" class="link">Ir a login</a>
+    </div>
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </form>
+</div>

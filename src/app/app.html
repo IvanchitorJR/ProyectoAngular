@@ -2,8 +2,15 @@
   <div class="nav-container">
     <span class="brand">HabitatDesign</span>
     <div class="nav-links">
-      <a routerLink="/catalogo" routerLinkActive="active" class="nav-link">Catálogo</a>
-      <a routerLink="/carrito" routerLinkActive="active" class="nav-link">Carrito</a>
+      <ng-container *ngIf="isAuthenticated()">
+        <a routerLink="/catalogo" routerLinkActive="active" class="nav-link">Catálogo</a>
+        <a routerLink="/carrito" routerLinkActive="active" class="nav-link">Carrito</a>
+        <button (click)="logout()" class="nav-link">Cerrar sesión</button>
+      </ng-container>
+      <ng-container *ngIf="!isAuthenticated()">
+        <a routerLink="/login" routerLinkActive="active" class="nav-link">Login</a>
+        <a routerLink="/register" routerLinkActive="active" class="nav-link">Registro</a>
+      </ng-container>
     </div>
   </div>
 </nav>
