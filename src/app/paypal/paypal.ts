@@ -34,26 +34,25 @@ export class Paypal implements OnInit {
       quantity: String(p.cantidad || 1),
       category: 'PHYSICAL_GOODS',
       unit_amount: {
-        currency_code: 'EUR',
+        currency_code: 'MXN',
         value: String(p.precio)
       }
     }));
 
     const total = this.productos.reduce((acc, p) => acc + (p.precio * (p.cantidad || 1)), 0);
 
-
     this.payPalConfig = {
-      currency: 'EUR',
+      currency: 'MXN',
       clientId: 'AcxeK-Q6ukxO8MY1dev1zfZfz_ZVqaoAYWrwk1iwMUyiEwaSallBYATXkPfQhlMd3cpRJ4LjnmYNXVhl',
       createOrderOnClient: (data) => <ICreateOrderRequest>{
         intent: 'CAPTURE',
         purchase_units: [{
           amount: {
-            currency_code: 'EUR',
+            currency_code: 'MXN',
             value: String(total),
             breakdown: {
               item_total: {
-                currency_code: 'EUR',
+                currency_code: 'MXN',
                 value: String(total)
               }
             }
