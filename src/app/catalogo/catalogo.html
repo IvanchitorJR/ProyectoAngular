@@ -8,6 +8,12 @@
   <div class="grid grid-cols-2 gap-4">
     @for (producto of productos; track producto.id) {
     <div class="p-4 border rounded shadow">
+        <img 
+          [src]="producto.imagen" 
+          alt="{{ producto.nombre }}" 
+          class="producto-imagen"
+        />
+
         <h3 class="font-semibold">{{ producto.nombre }}</h3>
         <p>{{ producto.descripcion }}</p>
         <p class="text-green-600 font-bold">{{ producto.precio | currency }}</p>
