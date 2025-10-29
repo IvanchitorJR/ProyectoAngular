@@ -41,7 +41,6 @@ export class Paypal implements OnInit {
 
     const total = this.productos.reduce((acc, p) => acc + (p.precio * (p.cantidad || 1)), 0);
 
-
     this.payPalConfig = {
       currency: 'MXN',
       clientId: 'AcxeK-Q6ukxO8MY1dev1zfZfz_ZVqaoAYWrwk1iwMUyiEwaSallBYATXkPfQhlMd3cpRJ4LjnmYNXVhl',
