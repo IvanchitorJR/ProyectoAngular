@@ -37,11 +37,25 @@
   border: none;
   background: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .nav-link:hover, button.nav-link:hover {
   background-color: #1e293b;
   color: #10b981;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626;
+  color: white;
+}
+
+.nav-text {
+  color: #10b981;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
 }
 
 .active {

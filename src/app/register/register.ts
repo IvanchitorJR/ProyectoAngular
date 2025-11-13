@@ -38,7 +38,12 @@ export class RegisterComponent {
         this.auth.login(this.correo, this.password).subscribe({
           next: (success) => {
             if (success) {
-              this.router.navigateByUrl('/catalogo');
+              // Redirigir según el tipo de usuario
+              if (this.auth.isAdmin()) {
+                this.router.navigateByUrl('/admpanel');
+              } else {
+                this.router.navigateByUrl('/catalogo');
+              }
             } else {
               this.error = 'Error al iniciar sesión después del registro';
             }

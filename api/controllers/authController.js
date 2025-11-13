@@ -113,7 +113,7 @@ export const login = async (req, res) => {
 
         //Generar token
         const token = jwt.sign(
-            { id: user.id, email: user.correo },
+            { id: user.id, email: user.correo, tipo: user.tipo },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
@@ -123,7 +123,8 @@ export const login = async (req, res) => {
             user: {
                 id: user.id,
                 nombre: user.nombre,
-                correo: user.correo
+                correo: user.correo,
+                tipo: user.tipo
             }
         });
     } catch (error) {

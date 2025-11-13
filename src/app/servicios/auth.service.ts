@@ -16,6 +16,7 @@ interface AuthResponse {
     id: number;
     nombre: string;
     correo: string;
+    tipo: number;
   };
 }
 
@@ -41,9 +42,11 @@ export class AuthService {
   login(correo: string, password: string): Observable<boolean> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { correo, password }).pipe(
       tap(response => {
+        console.log('Respuesta del servidor:', response);
         if (typeof window !== 'undefined') {
           localStorage.setItem(this.tokenKey, response.token);
           localStorage.setItem(this.userKey, JSON.stringify(response.user));
+          console.log('Usuario guardado:', response.user);
         }
         this.authState.next(true);
       }),
@@ -70,12 +73,28 @@ export class AuthService {
     return false;
   }
 
-  getCurrentUser(): { id?: number; nombre?: string; correo?: string } | null {
+  getCurrentUser(): { id?: number; nombre?: string; correo?: string; tipo?: number } | null {
     if (typeof window !== 'undefined') {
       const raw = localStorage.getItem(this.userKey);
       return raw ? JSON.parse(raw) : null;
     }
     return null;
+  }
+
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    console.log('isAdmin() - Usuario actual:', user);
+    const isAdminResult = user?.tipo === 1;
+    console.log('isAdmin() - Resultado:', isAdminResult);
+    return isAdminResult;
+  }
+
+  isClient(): boolean {
+    const user = this.getCurrentUser();
+    console.log('isClient() - Usuario actual:', user);
+    const isClientResult = user?.tipo === 0;
+    console.log('isClient() - Resultado:', isClientResult);
+    return isClientResult;
   }
 
   getToken(): string | null {
