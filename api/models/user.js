@@ -72,8 +72,40 @@ export const User = {
         }
     },
 
+
     validatePassword: (password, storedPassword) => {
         // Comparación directa, sin encriptación
         return Promise.resolve(password === storedPassword);
+    },
+
+    setResetToken: async (email, token, expires) => {
+        // Intenta actualizar en usuarios, si no existe, en users
+        const base = 'UPDATE {table} SET reset_token = ?, reset_token_expires = ? WHERE correo = ?';
+        try {
+            await tryQueryWithFallback(base, [token, expires, email]);
+            return true;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    findByResetToken: async (token) => {
+        const base = 'SELECT * FROM {table} WHERE reset_token = ?';
+        try {
+            const res = await tryQueryWithFallback(base, [token]);
+            return res[0];
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    updatePasswordByToken: async (token, newPassword) => {
+        const base = 'UPDATE {table} SET password = ?, reset_token = NULL, reset_token_expires = NULL WHERE reset_token = ?';
+        try {
+            await tryQueryWithFallback(base, [newPassword, token]);
+            return true;
+        } catch (err) {
+            throw err;
+        }
     }
 };
