@@ -8,7 +8,7 @@
           <a routerLink="/admpanel" routerLinkActive="active" class="nav-link">
             <i class="mdi mdi-shield-account me-1"></i>Panel Admin
           </a>
-          <span class="nav-text">Hola, {{ getCurrentUser()?.nombre }}</span>
+          <span class="nav-text">Bienvenido, {{ getCurrentUser()?.nombre }}</span>
         </ng-container>
         
         <!-- Navegación para clientes -->
@@ -18,13 +18,17 @@
           </a>
           <a routerLink="/carrito" routerLinkActive="active" class="nav-link">
             <i class="mdi mdi-cart me-1"></i>Carrito
-          </a>
-          <span class="nav-text">Hola, {{ getCurrentUser()?.nombre }}</span>
+          
+          </a> 
+          
+          <span class="nav-text">Bienvenido, {{ getCurrentUser()?.nombre }}</span>
         </ng-container>
+        
         
         <button (click)="logout()" class="nav-link logout-btn">
           <i class="mdi mdi-logout me-1"></i>Cerrar sesión
         </button>
+        
       </ng-container>
       <ng-container *ngIf="!isAuthenticated()">
         <a routerLink="/login" routerLinkActive="active" class="nav-link">Login</a>

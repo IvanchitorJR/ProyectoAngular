@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CatalogoComponent } from './catalogo/catalogo';
 import { CarritoComponent } from './carrito/carrito';
@@ -18,26 +18,21 @@ export class App {
   private router = inject(Router);
 
   constructor() {
-    // Escuchar cambios en el estado de autenticación
-    this.auth.getAuthState().subscribe(isAuthenticated => {
-      if (isAuthenticated) {
-        // Si se autentica, redirigir según el tipo de usuario
-        setTimeout(() => {
-          const user = this.auth.getCurrentUser();
-          console.log('App - Usuario autenticado:', user);
-          
-          if (user && this.router.url === '/login') {
-            if (user.tipo === 1) {
-              console.log('App - Redirigiendo admin a admpanel');
-              this.router.navigate(['/admpanel']);
-            } else if (user.tipo === 0) {
-              console.log('App - Redirigiendo cliente a catalogo');
-              this.router.navigate(['/catalogo']);
-            }
+    // Verificar si el usuario ya está autenticado al cargar la app
+    if (this.auth.isAuthenticated()) {
+      const user = this.auth.getCurrentUser();
+      if (user) {
+        // Solo redirigir si estamos en la página de login o en la raíz
+        const currentUrl = this.router.url;
+        if (currentUrl === '/login' || currentUrl === '/') {
+          if (user.tipo === 1) {
+            this.router.navigate(['/admpanel']);
+          } else if (user.tipo === 0) {
+            this.router.navigate(['/catalogo']);
           }
-        }, 300);
+        }
       }
-    });
+    }
   }
 
   logout() {
