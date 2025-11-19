@@ -1,0 +1,63 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="card-title mb-0">
+            <i class="mdi mdi-shield-account me-2"></i>
+            Panel de Administración
+          </h3>
+        </div>
+        <div class="card-body text-center py-5">
+          <div class="mb-4">
+            <i class="mdi mdi-account-circle display-1 text-primary"></i>
+          </div>
+          <h2 class="text-primary mb-3">¡Bienvenido Administrador!</h2>
+          <h4 class="text-muted mb-4" *ngIf="usuario">{{ usuario.nombre }}</h4>
+          
+          <div class="row mt-5">
+            <div class="col-md-4 mb-3">
+              <div class="card border-primary">
+                <div class="card-body">
+                  <i class="mdi mdi-package-variant display-4 text-primary mb-3"></i>
+                  <h5>Gestionar Productos</h5>
+                  <p class="text-muted">Agregar, editar o eliminar productos del catálogo</p>
+                  <button class="btn btn-outline-primary" disabled>Próximamente</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <div class="card border-success">
+                <div class="card-body">
+                  <i class="mdi mdi-account-group display-4 text-success mb-3"></i>
+                  <h5>Gestionar Usuarios</h5>
+                  <p class="text-muted">Ver y administrar usuarios del sistema</p>
+                  <button class="btn btn-outline-success" disabled>Próximamente</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <div class="card border-warning">
+                <div class="card-body">
+                  <i class="mdi mdi-chart-line display-4 text-warning mb-3"></i>
+                  <h5>Reportes</h5>
+                  <p class="text-muted">Ver estadísticas y reportes de ventas</p>
+                  <button class="btn btn-outline-warning" disabled>Próximamente</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-footer text-center">
+          <button class="btn btn-danger" (click)="logout()">
+            <i class="mdi mdi-logout me-2"></i>
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

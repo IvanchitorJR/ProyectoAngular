@@ -30,12 +30,14 @@ export class LoginComponent {
     this.auth.login(this.correo, this.password).subscribe({
       next: (success) => {
         if (success) {
-          this.router.navigateByUrl('/catalogo');
+          // Simplemente recargar la página para forzar la redirección
+          window.location.reload();
         } else {
           this.error = 'Credenciales inválidas';
         }
       },
       error: (err) => {
+        console.error('Error en login:', err);
         this.error = err.error?.message || 'Error al iniciar sesión';
       }
     });
