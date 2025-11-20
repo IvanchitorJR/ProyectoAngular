@@ -1,12 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../servicios/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admpanel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './admpanel.html',
   styleUrls: ['./admpanel.css']
 })

@@ -78,7 +78,15 @@ export const resetPassword = async (req, res) => {
 
 export const register = async (req, res) => {
     try {
-        const { nombre, correo, password } = req.body;
+        const { nombre, correo, password, tipo } = req.body;
+
+        // Validación de campos requeridos
+        if (!nombre || !correo || !password) {
+            return res.status(400).json({ message: 'Nombre, correo y contraseña son requeridos' });
+        }
+
+        // Validar tipo: debe ser 0 (cliente) o 1 (admin)
+        const tipoUsuario = tipo === 1 ? 1 : 0;
 
         //Verificar si el usuario ya existe
         const existingUser = await User.findByEmail(correo);
@@ -86,9 +94,9 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: 'El correo ya está registrado' });
         }
 
-        //Crear nuevo usuario
-        await User.create({ nombre, correo, password });
-        res.status(201).json({ message: 'Usuario registrado correctamente' });
+        //Crear nuevo usuario con el tipo especificado
+        await User.create({ nombre, correo, password, tipo: tipoUsuario });
+        res.status(201).json({ message: 'Usuario registrado correctamente', tipo: tipoUsuario });
     } catch (error) {
         console.error('Error al registrar:', error);
         res.status(500).json({ message: 'Error al registrar usuario' });

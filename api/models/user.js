@@ -30,8 +30,8 @@ async function tryQueryWithFallback(baseQuery, params) {
 export const User = {
     create: (userData) => {
         return new Promise((resolve, reject) => {
-            const insertTemplate = 'INSERT INTO {table} (nombre, correo, password) VALUES (?, ?, ?)';
-            const params = [userData.nombre, userData.correo, userData.password];
+            const insertTemplate = 'INSERT INTO {table} (nombre, correo, password, tipo) VALUES (?, ?, ?, ?)';
+            const params = [userData.nombre, userData.correo, userData.password, userData.tipo != null ? userData.tipo : 0];
             try {
                 // try usuarios then users
                 try {

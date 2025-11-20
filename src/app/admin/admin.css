@@ -1,33 +1,8 @@
-.card {
-  border-radius: 10px;
-}
-
-.card-header {
-  border-radius: 10px 10px 0 0;
-}
-
-.display-1 {
-  font-size: 5rem;
-}
-
-.display-4 {
-  font-size: 2.5rem;
-}
-
-.card-body {
-  transition: transform 0.2s ease-in-out;
-}
-
-.card:hover .card-body {
-  transform: translateY(-5px);
-}
-
-.btn {
-  border-radius: 20px;
-  padding: 8px 20px;
-}
-
-.container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-}
+.card { border-radius: 6px; border: 1px solid #e0e0e0; }
+.card-header { background: #f8f8f8; border-bottom: 1px solid #eaeaea; }
+.card-body { padding: 16px; }
+.btn { border-radius: 4px; }
+.qty-controls { display: flex; align-items: center; justify-content: center; }
+.qty-value { min-width: 36px; text-align: center; display: inline-block; }
+.table td, .table th { vertical-align: middle; }
+.container { padding-bottom: 40px; }

@@ -4,6 +4,7 @@ import { IPayPalConfig, ICreateOrderRequest } from 'ngx-paypal';
 import { NgxPayPalModule } from 'ngx-paypal';
 import { Producto } from '../modelos/producto';
 import { CarritoService } from '../servicios/carrito';
+import { ProductoService } from '../servicios/producto';
 
 @Component({
   selector: 'app-paypal',
@@ -21,7 +22,8 @@ export class Paypal implements OnInit {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object, 
-    public carritoService: CarritoService
+    public carritoService: CarritoService,
+    private productoService: ProductoService
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +75,20 @@ export class Paypal implements OnInit {
       },
       onClientAuthorization: (data: any) => {
         console.log('Pago completado', data);
-        this.carritoService.exportarXML();
+        // Llamar al backend para decrementar stock
+        const items = this.productos.map(p => ({ id: p.id, cantidad: p.cantidad || 1 }));
+        this.productoService.decrementStock(items).subscribe({
+          next: (resp) => {
+            console.log('Respuesta reducción stock:', resp);
+            this.carritoService.exportarXML();
+            this.carritoService.vaciar();
+          },
+          error: (err) => {
+            console.error('Error al decrementar stock:', err);
+            this.carritoService.exportarXML();
+            this.carritoService.vaciar();
+          }
+        });
       },
       onCancel: (data: any, actions: any) => console.log('Cancelado', data, actions),
       onError: (err: any) => console.error('Error PayPal', err),
