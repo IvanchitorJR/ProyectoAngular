@@ -7,15 +7,17 @@ import { AdminGuard } from './servicios/admin.guard';
 import { ClientGuard } from './servicios/client.guard';
 import { LoginComponent } from './login/login';
 import { RegisterComponent } from './register/register';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password';
 
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'catalogo', component: CatalogoComponent },
     { path: 'carrito', component: CarritoComponent },
     { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
     { path: 'admpanel', component: AdmpanelComponent, canActivate: [AdminGuard] },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: '**', redirectTo: 'login' }  // Catch-all para rutas no definidas
+    { path: '**', redirectTo: 'login' } 
 ];
