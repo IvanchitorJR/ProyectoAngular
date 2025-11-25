@@ -1,8 +1,73 @@
-.card { border-radius: 6px; border: 1px solid #e0e0e0; }
-.card-header { background: #f8f8f8; border-bottom: 1px solid #eaeaea; }
-.card-body { padding: 16px; }
-.btn { border-radius: 4px; }
-.qty-controls { display: flex; align-items: center; justify-content: center; }
-.qty-value { min-width: 36px; text-align: center; display: inline-block; }
-.table td, .table th { vertical-align: middle; }
-.container { padding-bottom: 40px; }
+.card { 
+  border-radius: 6px; 
+  border: 1px solid #e0e0e0; 
+}
+
+.card-header { 
+  background: #f8f8f8; 
+  border-bottom: 1px solid #eaeaea; 
+  color: #059669;
+}
+
+.card-body { 
+  padding: 16px; 
+}
+
+.btn { 
+  border-radius: 4px; 
+}
+
+.qty-controls { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+
+.qty-value { 
+  min-width: 36px; 
+  text-align: center; 
+  display: inline-block; 
+}
+
+.table td, .table th { 
+  vertical-align: middle; 
+}
+
+.container { 
+  padding-bottom: 40px; 
+}
+
+/* Colores personalizados verde y azul oscuro */
+.bg-dark-blue {
+  background-color: #0f172a ;
+}
+
+.btn-success-green {
+  background-color: #155b26;
+  border-color: #155b26;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.btn-success-green:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn-blue {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.btn-blue:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.btn-secondary{
+    background-color: #525252;
+    border-color: #525252;
+    margin-bottom: 5px;
+}
