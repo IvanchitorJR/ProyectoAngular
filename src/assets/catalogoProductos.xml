@@ -3,7 +3,7 @@
         <id>1</id>
         <nombre>Sillón Individual</nombre>
         <precio>3199</precio>
-        <imagen>assets/sillon.jpeg</imagen>
+        <imagen>assets/sillon.jpg</imagen>
         <descripcion>Sillón individual de cuero sintético, color marrón oscuro, con estructura de madera y patas de metal. 
         Ideal para salas de estar y oficinas.</descripcion>
     </producto>
