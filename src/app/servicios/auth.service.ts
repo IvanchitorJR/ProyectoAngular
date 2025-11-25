@@ -8,6 +8,7 @@ export interface User {
   nombre?: string;
   correo: string;
   password: string;
+  tipo?: number;
 }
 
 interface AuthResponse {

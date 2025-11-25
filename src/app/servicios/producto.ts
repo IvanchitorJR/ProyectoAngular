@@ -1,8 +1,9 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Producto } from '../modelos/producto';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,38 @@ import { map, Observable } from 'rxjs';
 export class ProductoService {
 
   private apiUrl = 'http://localhost:4000/api';
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+  private auth = inject(AuthService);
+  constructor() { }
 
   getProductos(): Observable<Producto[]> {
     return this.http.get<Producto[]>(`${this.apiUrl}/productos`);
+  }
+
+  // Admin: agregar producto
+  addProducto(product: Partial<Producto>): Observable<any> {
+    const token = this.auth.getToken();
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.post(`${this.apiUrl}/productos`, product, { headers });
+  }
+
+  // Admin: eliminar producto
+  deleteProducto(id: number): Observable<any> {
+    const token = this.auth.getToken();
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.delete(`${this.apiUrl}/productos/${id}`, { headers });
+  }
+
+  // Admin: actualizar producto (descripcion / cantidad)
+  updateProducto(id: number, data: { descripcion?: string; cantidad?: number }): Observable<any> {
+    const token = this.auth.getToken();
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return this.http.put(`${this.apiUrl}/productos/${id}`, data, { headers });
+  }
+
+  // Decrementar stock tras compra
+  decrementStock(items: { id: number; cantidad: number }[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/productos/reducir-stock`, { items });
   }
 
   /*private xmlUrl = 'assets/catalogoProductos.xml';

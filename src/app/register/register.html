@@ -1,22 +1,50 @@
 <div class="auth-container">
-  <h2>Registro de usuario</h2>
+  <h2>Crear Cuenta</h2>
   <form (ngSubmit)="submit()">
     <div class="form-row">
-      <label>Nombre</label>
-      <input type="text" [(ngModel)]="nombre" name="nombre" />
+      <label>Nombre Completo *</label>
+      <input type="text" [(ngModel)]="nombre" name="nombre" placeholder="Tu nombre" required />
     </div>
+    
     <div class="form-row">
-      <label>Email</label>
-      <input type="email" [(ngModel)]="correo" name="correo" required />
+      <label>Email *</label>
+      <input type="email" [(ngModel)]="correo" name="correo" placeholder="correo@ejemplo.com" required />
     </div>
+    
     <div class="form-row">
-      <label>Contraseña</label>
-      <input type="password" [(ngModel)]="password" name="password" required />
+      <label>Contraseña *</label>
+      <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
     </div>
+
+    <!-- Selección de Rol -->
+    <div class="form-row role-selection">
+      <label>¿Qué tipo de cuenta deseas? *</label>
+      <div class="role-options">
+        <div class="role-card" [class.selected]="tipo === 0" (click)="tipo = 0">
+          <div class="role-icon">👤</div>
+          <div class="role-title">Comprador</div>
+          <div class="role-description">Compra y gestiona tus pedidos</div>
+          <input type="radio" [(ngModel)]="tipo" [value]="0" name="tipoCliente" />
+        </div>
+        
+        <div class="role-card" [class.selected]="tipo === 1" (click)="tipo = 1">
+          <div class="role-icon">🏪</div>
+          <div class="role-title">Administrador</div>
+          <div class="role-description">Vende y gestiona tu inventario</div>
+          <input type="radio" [(ngModel)]="tipo" [value]="1" name="tipoAdmin" />
+        </div>
+      </div>
+    </div>
+
     <div class="form-row">
-      <button type="submit">Registrar</button>
-      <a routerLink="/login" class="link">Ir a login</a>
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Registrando...' : 'Registrar' }}
+      </button>
+      <a routerLink="/login" class="link">¿Ya tienes cuenta? Inicia sesión</a>
     </div>
-    <div class="error" *ngIf="error">{{ error }}</div>
+    
+    <div class="error" *ngIf="error">
+      <strong>⚠️ Error:</strong> {{ error }}
+    </div>
   </form>
 </div>
