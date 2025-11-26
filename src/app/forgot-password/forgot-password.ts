@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -14,7 +14,9 @@ import { RouterModule } from '@angular/router';
 })
 export class ForgotPasswordComponent implements OnDestroy {
   private http = inject(HttpClient);
+  private cd = inject(ChangeDetectorRef);
   private resendTimer?: any;
+  private loadingWatchdog?: any;
 
   // Datos del formulario
   email = '';
@@ -62,11 +64,13 @@ export class ForgotPasswordComponent implements OnDestroy {
   private showMessage(text: string, type: 'success' | 'error' | 'info' = 'info') {
     this.message = text;
     this.messageType = type;
+    this.cd.detectChanges();
 
     // Auto-ocultar mensajes después de 5 segundos
     setTimeout(() => {
       if (this.message === text) {
         this.message = '';
+        this.cd.detectChanges();
       }
     }, 5000);
   }
@@ -79,6 +83,7 @@ export class ForgotPasswordComponent implements OnDestroy {
         clearInterval(this.resendTimer);
         this.resendTimer = undefined;
       }
+      this.cd.detectChanges();
     }, 1000);
   }
 
@@ -86,20 +91,43 @@ export class ForgotPasswordComponent implements OnDestroy {
     if (!this.email || this.isLoading) return;
 
     this.isLoading = true;
+    // watchdog: si la petición queda colgada, desbloquear UI después de 15s
+    if (this.loadingWatchdog) clearTimeout(this.loadingWatchdog);
+    this.loadingWatchdog = setTimeout(() => {
+      if (this.isLoading) {
+        console.warn('requestToken watchdog: clearing isLoading');
+        this.isLoading = false;
+        this.showMessage('La petición tardó demasiado. Intenta de nuevo.', 'error');
+        this.cd.detectChanges();
+      }
+    }, 15000);
     this.message = '';
 
     this.http.post<any>(this.apiUrl('/api/auth/forgot-password'), { correo: this.email })
-      .pipe(finalize(() => { this.isLoading = false; }))
+      .pipe(finalize(() => {
+        console.log('requestToken finalize - isLoading -> false');
+        if (this.loadingWatchdog) { clearTimeout(this.loadingWatchdog); this.loadingWatchdog = undefined; }
+        this.isLoading = false;
+        this.cd.detectChanges();
+      }))
       .subscribe({
         next: (response) => {
           console.log('Respuesta del servidor:', response);
+          // asegurarse de desbloquear UI por si acaso finalize no se ejecuta
+          if (this.loadingWatchdog) { clearTimeout(this.loadingWatchdog); this.loadingWatchdog = undefined; }
+          this.isLoading = false;
           this.step = 'reset';
           this.showMessage(response.message || 'Código enviado', 'success');
           this.startResendCooldown();
+          this.cd.detectChanges();
         },
         error: (err) => {
           console.error('Error:', err);
+          // asegurarse de desbloquear UI
+          if (this.loadingWatchdog) { clearTimeout(this.loadingWatchdog); this.loadingWatchdog = undefined; }
+          this.isLoading = false;
           this.showMessage(err.error?.message || 'Error al enviar código', 'error');
+          this.cd.detectChanges();
         }
       });
   }
@@ -113,21 +141,45 @@ export class ForgotPasswordComponent implements OnDestroy {
     }
 
     this.isLoading = true;
+    // watchdog para resetPassword
+    if (this.loadingWatchdog) clearTimeout(this.loadingWatchdog);
+    this.loadingWatchdog = setTimeout(() => {
+      if (this.isLoading) {
+        console.warn('resetPassword watchdog: clearing isLoading');
+        this.isLoading = false;
+        this.showMessage('La petición tardó demasiado. Intenta de nuevo.', 'error');
+        this.cd.detectChanges();
+      }
+    }, 15000);
     this.message = '';
 
     this.http.post<any>(this.apiUrl('/api/auth/reset-password'), {
       token: this.token,
       newPassword: this.newPassword
     })
-      .pipe(finalize(() => { this.isLoading = false; }))
+      .pipe(finalize(() => {
+        console.log('resetPassword finalize - isLoading -> false');
+        if (this.loadingWatchdog) { clearTimeout(this.loadingWatchdog); this.loadingWatchdog = undefined; }
+        this.isLoading = false;
+        this.cd.detectChanges();
+      }))
       .subscribe({
         next: () => {
+          // desbloquear UI por si finalize no se ejecuta
+          if (this.loadingWatchdog) { clearTimeout(this.loadingWatchdog); this.loadingWatchdog = undefined; }
+          this.isLoading = false;
           this.step = 'done';
           this.showMessage('¡Contraseña actualizada exitosamente!', 'success');
+          this.cd.detectChanges();
         },
         error: (err) => {
+          console.error('resetPassword error:', err);
+          // desbloquear UI
+          if (this.loadingWatchdog) { clearTimeout(this.loadingWatchdog); this.loadingWatchdog = undefined; }
+          this.isLoading = false;
           const errorMessage = err.error?.message || 'Error al cambiar la contraseña. Verifica el código.';
           this.showMessage(errorMessage, 'error');
+          this.cd.detectChanges();
         }
       });
   }
