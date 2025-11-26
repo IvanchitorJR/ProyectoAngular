@@ -10,7 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 //Rutas
-app.use('/api/catalogo', catalogoRoutes);
+// Montar las rutas del catálogo en /api para exponer /api/productos
+app.use('/api', catalogoRoutes);
 app.use('/api/auth', authRoutes);
 
 export default app;

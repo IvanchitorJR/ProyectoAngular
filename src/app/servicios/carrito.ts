@@ -80,13 +80,21 @@ export class CarritoService {
       xml += `    <id>${p.id}</id>\n`;
       xml += `    <nombre>${p.nombre}</nombre>\n`;
       xml += `    <precio>${p.precio}</precio>\n`;
+      xml += `    <cantidad>${p.cantidad || 1}</cantidad>\n`;
+      xml += `    <subtotal>${p.precio * (p.cantidad || 1)}</subtotal>\n`;
       if (p.descripcion) {
         xml += `    <descripcion>${p.descripcion}</descripcion>\n`;
       }
       xml += `  </producto>\n`;
     }
 
-    xml += `  <total>${this.total()}</total>\n`;
+    const subtotal = this.total();
+    const iva = this.iva();
+    const totalConIVA = this.totalConIVA();
+
+    xml += `  <subtotal>${subtotal.toFixed(2)}</subtotal>\n`;
+    xml += `  <iva>${iva.toFixed(2)}</iva>\n`;
+    xml += `  <totalConIVA>${totalConIVA.toFixed(2)}</totalConIVA>\n`;
     xml += `</recibo>`;
 
     if (this.isBrowser) {

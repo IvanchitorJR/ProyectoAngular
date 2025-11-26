@@ -2,6 +2,7 @@ import { Component, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -88,17 +89,16 @@ export class ForgotPasswordComponent implements OnDestroy {
     this.message = '';
 
     this.http.post<any>(this.apiUrl('/api/auth/forgot-password'), { correo: this.email })
+      .pipe(finalize(() => { this.isLoading = false; }))
       .subscribe({
         next: (response) => {
-          console.log('Respuesta del servidor:', response); 
-          this.isLoading = false;
-          this.step = 'reset'; 
+          console.log('Respuesta del servidor:', response);
+          this.step = 'reset';
           this.showMessage(response.message || 'Código enviado', 'success');
           this.startResendCooldown();
         },
         error: (err) => {
-          console.error('Error:', err); 
-          this.isLoading = false;
+          console.error('Error:', err);
           this.showMessage(err.error?.message || 'Error al enviar código', 'error');
         }
       });
@@ -119,14 +119,13 @@ export class ForgotPasswordComponent implements OnDestroy {
       token: this.token,
       newPassword: this.newPassword
     })
+      .pipe(finalize(() => { this.isLoading = false; }))
       .subscribe({
         next: () => {
-          this.isLoading = false;
           this.step = 'done';
           this.showMessage('¡Contraseña actualizada exitosamente!', 'success');
         },
         error: (err) => {
-          this.isLoading = false;
           const errorMessage = err.error?.message || 'Error al cambiar la contraseña. Verifica el código.';
           this.showMessage(errorMessage, 'error');
         }

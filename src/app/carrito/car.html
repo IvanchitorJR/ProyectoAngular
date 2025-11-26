@@ -33,12 +33,21 @@
               </div>
               <div class="col-md-5">
                 <p class="text-muted mb-1">Cantidad</p>
-                <h5 class="mb-0">{{ producto.cantidad }}</h5>
+                <div class="qty-controls">
+                  <button class="btn btn-sm btn-outline-secondary" (click)="decrementarCantidad(producto)" title="Disminuir">−</button>
+                  <span class="qty-value">{{ producto.cantidad }}</span>
+                  <button class="btn btn-sm btn-outline-secondary" (click)="incrementarCantidad(producto)" title="Aumentar">+</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </ng-container>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+        {{ errorMessage }}
+      </div>
 
       <div class="row my-4">
         <div class="col-sm-6">

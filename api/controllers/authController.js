@@ -20,7 +20,7 @@ const createTransporter = () => {
   }
   
   // Fallback: usar Ethereal Email para testing
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
     secure: false,
@@ -75,7 +75,15 @@ const sendResetEmail = async (email, token) => {
       `
     };
 
-    const info = await transporter.sendMail(mailOptions);
+    // Envolver el envío en un timeout para evitar que la petición quede colgada
+    const sendMailWithTimeout = (transporter, options, timeout = 15000) => {
+      return Promise.race([
+        transporter.sendMail(options),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('sendMail timeout')), timeout))
+      ]);
+    };
+
+    const info = await sendMailWithTimeout(transporter, mailOptions, 15000);
     console.log("Correo enviado exitosamente:", info.messageId);
     
     // Si usas Ethereal, mostrar URL de preview

@@ -21,14 +21,12 @@
       <label>¿Qué tipo de cuenta deseas? *</label>
       <div class="role-options">
         <div class="role-card" [class.selected]="tipo === 0" (click)="tipo = 0">
-          <div class="role-icon">👤</div>
           <div class="role-title">Comprador</div>
           <div class="role-description">Compra y gestiona tus pedidos</div>
           <input type="radio" [(ngModel)]="tipo" [value]="0" name="tipoCliente" />
         </div>
         
         <div class="role-card" [class.selected]="tipo === 1" (click)="tipo = 1">
-          <div class="role-icon">🏪</div>
           <div class="role-title">Administrador</div>
           <div class="role-description">Vende y gestiona tu inventario</div>
           <input type="radio" [(ngModel)]="tipo" [value]="1" name="tipoAdmin" />
