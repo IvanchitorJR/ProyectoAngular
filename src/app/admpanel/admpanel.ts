@@ -24,7 +24,11 @@ export class AdmpanelComponent implements OnInit {
     // Verificar que sea administrador, si no, redirigir
     if (!this.usuario || this.usuario.tipo !== 1) {
       this.router.navigate(['/catalogo']);
+      return;
     }
+    
+    // Redirigir automáticamente al gestor de productos
+    this.router.navigate(['/admin']);
   }
 
   logout() {

@@ -100,10 +100,12 @@ const sendResetEmail = async (email, token) => {
 
 // Solicitar recuperación de contraseña
 export const forgotPassword = async (req, res) => {
+  console.log('🎯 Recibida petición forgot-password:', req.body);
   try {
     const { correo } = req.body;
     
     if (!correo) {
+      console.log('❌ Error: Correo no proporcionado');
       return res.status(400).json({ message: 'Correo requerido' });
     }
 
@@ -124,20 +126,34 @@ export const forgotPassword = async (req, res) => {
     const emailResult = await sendResetEmail(correo, token);
     
     if (emailResult.success) {
-      console.log(`Código de verificación enviado a ${correo}: ${token}`);
-      res.json({ 
+      console.log(`✅ Código de verificación enviado a ${correo}: ${token}`);
+      console.log('🚀 Enviando respuesta exitosa al frontend...');
+      
+      const response = { 
         message: 'Código de verificación enviado a tu correo electrónico',
         success: true 
-      });
+      };
+      
+      console.log('📤 Respuesta que se envía:', response);
+      res.status(200).json(response);
+      console.log('✅ Respuesta enviada al cliente');
+      return;
     } else {
       // Si falla el envío, mostrar código en consola como fallback
-      console.log(`Código de verificación para ${correo}: ${token}`);
-      console.log('Error enviando correo:', emailResult.error);
-      res.json({ 
+      console.log(`⚠️ Código de verificación para ${correo}: ${token}`);
+      console.log('❌ Error enviando correo:', emailResult.error);
+      console.log('🚀 Enviando respuesta con warning al frontend...');
+      
+      const response = { 
         message: 'Código generado (revisar consola del servidor - SMTP no configurado)',
         code: token, // Solo para desarrollo
         warning: true 
-      });
+      };
+      
+      console.log('📤 Respuesta que se envía:', response);
+      res.status(200).json(response);
+      console.log('✅ Respuesta enviada al cliente');
+      return;
     }
 
   } catch (error) {

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 })
 export class ForgotPasswordComponent implements OnDestroy {
   private http = inject(HttpClient);
+  private cdr = inject(ChangeDetectorRef);
   private resendTimer?: any;
 
   // Datos del formulario
@@ -88,20 +89,19 @@ export class ForgotPasswordComponent implements OnDestroy {
     this.isLoading = true;
     this.message = '';
 
-    this.http.post<any>(this.apiUrl('/api/auth/forgot-password'), { correo: this.email })
-      .pipe(finalize(() => { this.isLoading = false; }))
-      .subscribe({
-        next: (response) => {
-          console.log('Respuesta del servidor:', response);
-          this.step = 'reset';
-          this.showMessage(response.message || 'Código enviado', 'success');
-          this.startResendCooldown();
-        },
-        error: (err) => {
-          console.error('Error:', err);
-          this.showMessage(err.error?.message || 'Error al enviar código', 'error');
-        }
-      });
+    this.http.post(this.apiUrl('/api/auth/forgot-password'), { correo: this.email }).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        this.step = 'reset';
+        this.showMessage(response?.message || 'Código enviado exitosamente', 'success');
+        this.startResendCooldown();
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        this.showMessage(error.error?.message || 'Error al enviar código', 'error');
+      }
+    });
   }
 
   resetPassword() {
@@ -119,17 +119,19 @@ export class ForgotPasswordComponent implements OnDestroy {
       token: this.token,
       newPassword: this.newPassword
     })
-      .pipe(finalize(() => { this.isLoading = false; }))
-      .subscribe({
-        next: () => {
-          this.step = 'done';
-          this.showMessage('¡Contraseña actualizada exitosamente!', 'success');
-        },
-        error: (err) => {
-          const errorMessage = err.error?.message || 'Error al cambiar la contraseña. Verifica el código.';
-          this.showMessage(errorMessage, 'error');
-        }
-      });
+    .subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.step = 'done';
+        this.showMessage('¡Contraseña actualizada exitosamente!', 'success');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        const errorMessage = err.error?.message || 'Error al cambiar la contraseña. Verifica el código.';
+        this.showMessage(errorMessage, 'error');
+      }
+    });
   }
 
   resendCode() {
